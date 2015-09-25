@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table xmlns="http://query.yahooapis.com/v1/schema/table.xsd">
+  <meta>
+  <author>Daniel Krämer</author>
+  <description>HTML pages that need cookies</description>
+  <sampleQuery><![CDATA[
+select * from htmlcookie where
+url='http://www.acynor.com' 
+and cookie="foo=foo;bar=bar;" and xpath="*"]]></sampleQuery>
+  <documentationURL></documentationURL>
+  </meta>
+  <bindings>
+    <select itemPath="" produces="XML">
+    <urls>
+      <url>{url}</url>
+    </urls>
+    <inputs>
+      <key id="url" type="xs:string" required="true" paramType="variable"/>
+      <key id="cookie" type="xs:string" required="true" paramType="variable"/>
+      <key id="xpath" type="xs:string" required="true" paramType="variable"/>
+    </inputs>
+    <execute>
+    <![CDATA[
+	
+	  var myRequest = y.rest(url);  
+      var data = myRequest.accept('text/html').
+				 header('Cookie',cookie).
+                 get().response;
+      var xdata = y.xpath(data,xpath);
+      response.object = xdata;
+
+    ]]>
+    </execute>
+  </select> 
+  </bindings>
+</table>
